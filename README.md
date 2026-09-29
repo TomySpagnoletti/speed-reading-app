@@ -46,7 +46,7 @@ SpeedRead is built on [Jev](https://typesafe.ai), the first "System One" model f
 
 | Shortcut | Action |
 |---|---|
-| ⌘↵ | Analyze (runs on its own when pasting into an empty editor) |
+| ⌘↵ | Analyze (runs on its own when a paste replaces the whole text) |
 | ⌘L | Cycle through Line, Block and Sentence modes |
 | ⌘J | Jump to the next decision or action |
 | ⌘⇧⌫ | Delete every info segment |
@@ -58,9 +58,10 @@ SpeedRead is built on [Jev](https://typesafe.ai), the first "System One" model f
 SpeedRead currently targets macOS. You need [Node.js](https://nodejs.org) 24 or later, [Rust](https://rustup.rs) and the Xcode Command Line Tools, plus an [OpenRouter API key](https://openrouter.ai/keys).
 
 ```bash
+mkdir -p ~/.speedread
+echo "OPENROUTER_API_KEY=your-key" > ~/.speedread/.env
 git clone https://github.com/TomySpagnoletti/speed-reading-app.git
 cd speed-reading-app
-echo "OPENROUTER_API_KEY=your-key" > .env
 npm install
 npm run tauri dev
 ```
@@ -72,11 +73,12 @@ npm run tauri build -- --bundles app
 cp -R src-tauri/target/release/bundle/macos/SpeedRead.app /Applications/
 ```
 
-The app reads `OPENROUTER_API_KEY` from the `.env` file of the folder it was built from, on every request. Keep that folder in place after installing. The key never reaches the web view, and `.env` is git-ignored.
+The app reads `OPENROUTER_API_KEY` from `~/.speedread/.env` on every request, so you can move or delete the cloned folder after installing. The key never reaches the web view.
 
 ## Privacy
 
 - The text you analyze is sent to OpenRouter and TypeSafe to be classified.
+- Your API key stays on your machine, in `~/.speedread/.env`.
 - Notes stay on your machine, in `~/.speedread/notes.md`.
 - The call ledger stays on your machine, in `~/.speedread/ledger.jsonl`. The Reset button in the status bar clears it after a confirmation click.
 

@@ -5,7 +5,7 @@ import { invoke } from "@tauri-apps/api/core";
 import type { Range } from "@codemirror/state";
 import { Decoration, EditorView } from "@codemirror/view";
 import { classExtension, classified, gotoNext, planPrune, segmentRange, setSegments } from "./classes.ts";
-import { createEditor } from "./editor.ts";
+import { createEditor, isFullPaste } from "./editor.ts";
 import { classify, MODEL } from "./jev.ts";
 import { MODES, segment, type Mode } from "./segment.ts";
 
@@ -22,7 +22,7 @@ const view = createEditor($("editor"), "", "Paste the output of Claude or any ot
   classExtension,
   EditorView.updateListener.of((u) => {
     if (u.docChanged || u.transactions.some((tr) => tr.effects.some((e) => e.is(setSegments)))) refreshCounts();
-    if (u.startState.doc.length === 0 && u.transactions.some((tr) => tr.isUserEvent("input.paste"))) analyze();
+    if (u.transactions.some(isFullPaste)) analyze();
   }),
 ]);
 

@@ -21,10 +21,10 @@ impl Store {
     fn notes(&self) -> PathBuf {
         self.dir.join("notes.md")
     }
-}
 
-fn dotenv_path() -> PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR")).join("../.env")
+    fn env(&self) -> PathBuf {
+        self.dir.join(".env")
+    }
 }
 
 fn read_key(path: &Path) -> Result<String, String> {
@@ -92,7 +92,7 @@ fn reset(path: &Path) -> Result<(), String> {
 
 #[tauri::command]
 async fn decide(client: tauri::State<'_, reqwest::Client>, store: tauri::State<'_, Store>, body: Value) -> Result<Value, String> {
-    let key = read_key(&dotenv_path())?;
+    let key = read_key(&store.env())?;
     let res = client
         .post(DECISIONS_URL)
         .bearer_auth(key)
@@ -154,11 +154,6 @@ pub fn run() {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn project_dotenv_has_key() {
-        assert!(read_key(&dotenv_path()).is_ok());
-    }
 
     #[test]
     fn reads_key_line() {

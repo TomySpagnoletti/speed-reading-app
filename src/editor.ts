@@ -2,7 +2,7 @@ import { defaultKeymap, history, historyKeymap, indentWithTab } from "@codemirro
 import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
 import { HighlightStyle, syntaxHighlighting, bracketMatching } from "@codemirror/language";
 import { languages } from "@codemirror/language-data";
-import { EditorState, type Extension } from "@codemirror/state";
+import { EditorState, type Extension, type Transaction } from "@codemirror/state";
 import { EditorView, drawSelection, highlightActiveLine, highlightActiveLineGutter, keymap, lineNumbers, placeholder } from "@codemirror/view";
 import { tags as t } from "@lezer/highlight";
 
@@ -32,6 +32,14 @@ function selectLine(view: EditorView, pos: number) {
   const line = doc.lineAt(pos);
   view.dispatch({ selection: { anchor: line.from, head: line.number < doc.lines ? doc.line(line.number + 1).from : line.to } });
   view.focus();
+}
+
+export function isFullPaste(tr: Transaction): boolean {
+  let full = false;
+  tr.changes.iterChangedRanges((fromA, toA) => {
+    full = fromA === 0 && toA === tr.startState.doc.length;
+  });
+  return full && tr.isUserEvent("input.paste");
 }
 
 export function createEditor(parent: HTMLElement, doc: string, hint: string, extensions: Extension[]): EditorView {

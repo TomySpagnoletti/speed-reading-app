@@ -49,9 +49,14 @@ function status(text: string, meta: string) {
   $("status-meta").textContent = meta;
 }
 
+function formatCost(cost: number): string {
+  const micros = Math.ceil(Number((cost * 1e6).toFixed(3)));
+  return (micros / 1e6).toFixed(6);
+}
+
 async function refreshLedger() {
   const { calls, cost } = await invoke<{ calls: number; cost: number }>("ledger_totals");
-  $("ledger").textContent = `${calls} call(s) · $${cost.toFixed(6)} total`;
+  $("ledger").textContent = `${calls} call(s) · $${formatCost(cost)} total`;
 }
 
 async function resetLedger() {

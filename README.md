@@ -1,50 +1,115 @@
-# SpeedRead v0.1
+<p align="center">
+  <img src="app-icon.svg" width="128" height="128" alt="SpeedRead icon">
+</p>
 
-Paste the output of a coding agent (Claude, etc.). Jev, TypeSafe's decision model served through OpenRouter, classifies each line, Markdown block or sentence:
+<h1 align="center">SpeedRead</h1>
 
-- **Decision** (orange): a choice or an approval is waiting for you.
+<p align="center">
+  <strong>Read AI coding agent outputs in seconds.</strong><br>
+  Paste what Claude Code, Codex or any other agent wrote. SpeedRead highlights what needs your decision or your action, and dims everything else.
+</p>
+
+<p align="center">
+  Powered by <a href="https://openrouter.ai/typesafe/jev-1.13">Jev</a>, TypeSafe's new decision model · macOS · MIT
+</p>
+
+![SpeedRead classifying an agent report in Sentence mode](docs/screenshot.png)
+
+## Why
+
+Coding agents write long reports. Most of it is status: what they did, which files changed, which tests pass. Buried inside are the few sentences that actually need you: a choice between two options, a key to provide, a failing test to check.
+
+SpeedRead finds those sentences for you:
+
+- **Decision** (orange): a choice, a proposal or an approval is waiting for you.
 - **Action** (blue): something to do, a question to answer or a problem to handle.
-- **Info** (dimmed): plain report, deletable in one go.
+- **Info** (dimmed): plain report. Delete all of it in one keystroke and keep only your to-do list.
 
-In Line and Block modes whole lines are highlighted. In Sentence mode only the sentence is highlighted, unless it fills its line.
+## Powered by Jev
+
+SpeedRead is built on [Jev](https://openrouter.ai/docs/guides/community/jev), the first "System One" model from TypeSafe, served through the OpenRouter Decisions API. Jev does not generate text. It answers typed questions with a choice and a probability for each option, which is exactly what triage needs:
+
+- **Fast**: a whole agent message is classified in about 0.3 to 0.6 seconds, batched into a single call.
+- **Cheap**: a typical analysis costs a few hundredths of a cent.
+- **Calibrated**: the color intensity follows Jev's probability, so confident verdicts stand out more.
+
+## Features
+
+- **Three granularities**: classify each line, each Markdown block, or each sentence. Sentence mode shines on long agent paragraphs where one sentence out of six matters.
+- **Delete info**: remove every info segment at once, including info sentences inside kept lines. Undo restores the text and its colors.
+- **Jump to next**: move through decisions and actions with one shortcut.
+- **Focused editor**: line numbers, click a number to select its line, Markdown highlighting that never hides a character.
+- **Notes panel**: a second editor on the right for your own notes. Nothing typed there is sent to Jev. Notes are saved locally.
+- **Call ledger**: every Jev call is logged locally with its cost, and the status bar shows the running total.
 
 ## Shortcuts
 
 | Shortcut | Action |
 |---|---|
 | ⌘↵ | Analyze (runs on its own when pasting into an empty editor) |
-| ⌘L | Cycle through Line, Block and Sentence modes (runs the analysis again) |
-| ⌘J | Jump to the next item that needs attention |
+| ⌘L | Cycle through Line, Block and Sentence modes |
+| ⌘J | Jump to the next decision or action |
 | ⌘⇧⌫ | Delete every info segment |
 | ⌘Z | Undo, colors included |
 | Click a line number | Select the whole line |
 
-## OpenRouter key
+## Getting started
 
-The key is read from `OPENROUTER_API_KEY` in the `.env` file at the project root, on every request. It never reaches the web view. `.env` is git-ignored.
-
-## Notes
-
-The Notes button opens a panel on the right, 40% of the window wide. It is the same editor, with line numbers and Markdown highlighting, but nothing typed there is sent to Jev. Notes are saved on every change to `~/.speedread/notes.md`.
-
-## Call ledger
-
-Every Jev call is appended to `~/.speedread/ledger.jsonl`, one JSON line per call with its time, id, model, input tokens and cost. The status bar shows the total number of calls and their cost since the last reset. The small Reset button next to it asks for a second click on Confirm, then deletes the ledger.
-
-## Development
+SpeedRead currently targets macOS. You need [Node.js](https://nodejs.org) 24 or later, [Rust](https://rustup.rs) and the Xcode Command Line Tools, plus an [OpenRouter API key](https://openrouter.ai/keys).
 
 ```bash
+git clone https://github.com/TomySpagnoletti/speed-reading-app.git
+cd speed-reading-app
+echo "OPENROUTER_API_KEY=your-key" > .env
 npm install
 npm run tauri dev
 ```
 
-Build the app with `npm run tauri build -- --bundles app`. The bundle lands in `src-tauri/target/release/bundle/macos/SpeedRead.app`.
+To build and install the app:
 
-## Structure
+```bash
+npm run tauri build -- --bundles app
+cp -R src-tauri/target/release/bundle/macos/SpeedRead.app /Applications/
+```
 
-- `src-tauri/src/lib.rs`: Rust proxy to the OpenRouter Decisions API, key loading, call ledger and notes storage.
-- `src/segment.ts`: splitting into lines, Markdown blocks or sentences.
-- `src/jev.ts`: Jev model, category criteria, parallel batches.
-- `src/classes.ts`: coloring, info deletion, navigation.
-- `src/editor.ts`: editor setup shared by the analysis editor and the notes panel, including Markdown highlighting.
-- `src/main.ts`: analysis flow, toolbar, notes panel and shortcuts.
+The app reads `OPENROUTER_API_KEY` from the `.env` file of the folder it was built from, on every request. Keep that folder in place after installing. The key never reaches the web view, and `.env` is git-ignored.
+
+## Privacy
+
+- The text you analyze is sent to OpenRouter and TypeSafe to be classified.
+- Notes stay on your machine, in `~/.speedread/notes.md`.
+- The call ledger stays on your machine, in `~/.speedread/ledger.jsonl`. The Reset button in the status bar clears it after a confirmation click.
+
+## How it works
+
+1. The pasted text is split into segments: lines, Markdown blocks or sentences. Code blocks and separators are marked as info locally, without any call.
+2. Each segment becomes one Jev choice question with three options. The whole numbered message is sent as context, so a list item is judged with the question that introduces it.
+3. Answers are painted as they arrive. Editing a segment drops its color, since the verdict no longer matches the text.
+
+## Development
+
+```bash
+npm test
+```
+
+This runs the TypeScript unit tests with the Node test runner and the Rust tests with Cargo.
+
+| Path | Role |
+|---|---|
+| `src/segment.ts` | Splitting into lines, Markdown blocks or sentences |
+| `src/jev.ts` | Jev model, category criteria, batched calls |
+| `src/classes.ts` | Colors, info deletion, navigation |
+| `src/editor.ts` | Editor setup shared by the main editor and the notes panel |
+| `src/main.ts` | Analysis flow, toolbar, notes panel and shortcuts |
+| `src-tauri/src/lib.rs` | OpenRouter proxy, API key loading, call ledger, notes storage |
+| `app-icon.svg` | Icon source, turned into every platform format with `npx tauri icon app-icon.svg` |
+
+Contributions are welcome. Read [AGENTS.md](AGENTS.md) first: the code is in English, has no comments, and every piece of logic lives in exactly one place.
+
+## Roadmap
+
+SpeedRead is built with Tauri, so Windows, Linux, iOS and Android builds are within reach. Only macOS is built and tested today.
+
+## License
+
+[MIT](LICENSE)

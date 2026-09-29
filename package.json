@@ -2,6 +2,12 @@
   "name": "speedread",
   "private": true,
   "version": "0.1.0",
+  "description": "Read AI coding agent outputs in seconds: Jev highlights what needs your decision or action.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TomySpagnoletti/speed-reading-app.git"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",

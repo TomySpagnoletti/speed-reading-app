@@ -1,9 +1,11 @@
 [package]
 name = "speedread"
 version = "0.1.0"
-description = "Speed reading for agent outputs"
+description = "Read AI coding agent outputs in seconds: Jev highlights what needs your decision or action."
 authors = ["Tomy Spagnoletti"]
 edition = "2021"
+license = "MIT"
+repository = "https://github.com/TomySpagnoletti/speed-reading-app"
 
 [lib]
 name = "speedread_lib"

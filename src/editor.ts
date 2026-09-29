@@ -9,14 +9,13 @@ import { tags as t } from "@lezer/highlight";
 const LINE_SEPARATORS = /\u2028|\u2029|\u0085|\v/g;
 
 const highlight = HighlightStyle.define([
-  { tag: t.keyword, color: "#b477cf" },
-  { tag: [t.string, t.special(t.string)], color: "#a1c181" },
-  { tag: [t.number, t.bool, t.null], color: "#bf956a" },
-  { tag: t.comment, color: "#5d636f", fontStyle: "italic" },
-  { tag: [t.function(t.variableName), t.function(t.propertyName)], color: "#73ade9" },
-  { tag: [t.typeName, t.className], color: "#6eb4bf" },
-  { tag: t.propertyName, color: "#d07277" },
-  { tag: t.operator, color: "#6eb4bf" },
+  { tag: t.keyword, class: "tok-keyword" },
+  { tag: [t.string, t.special(t.string)], class: "tok-string" },
+  { tag: [t.number, t.bool, t.null], class: "tok-number" },
+  { tag: t.comment, class: "tok-comment" },
+  { tag: [t.function(t.variableName), t.function(t.propertyName)], class: "tok-function" },
+  { tag: [t.typeName, t.className, t.operator], class: "tok-type" },
+  { tag: t.propertyName, class: "tok-property" },
   { tag: t.heading, class: "md-heading" },
   { tag: t.strong, class: "md-strong" },
   { tag: t.emphasis, class: "md-em" },

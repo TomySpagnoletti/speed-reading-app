@@ -29,7 +29,7 @@ SpeedRead finds those sentences for you:
 
 SpeedRead is built on [Jev](https://typesafe.ai), the first "System One" model from [TypeSafe](https://typesafe.ai), served through the [OpenRouter Decisions API](https://openrouter.ai/docs/guides/community/jev). Jev does not generate text. It answers typed questions with a choice and a probability for each option, which is exactly what triage needs:
 
-- **Fast**: a whole agent message is classified in about 0.3 to 0.6 seconds, batched into a single call.
+- **Fast**: a whole agent message is classified in about 0.3 to 0.6 seconds, with up to 25 segments per batched call.
 - **Cheap**: a typical analysis costs a few hundredths of a cent.
 - **Calibrated**: the color intensity follows Jev's probability, so confident verdicts stand out more.
 
@@ -69,7 +69,7 @@ npm run tauri dev
 To build and install the app:
 
 ```bash
-npm run tauri build -- --bundles app
+npm run tauri build
 cp -R src-tauri/target/release/bundle/macos/SpeedRead.app /Applications/
 ```
 

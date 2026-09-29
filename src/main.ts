@@ -14,6 +14,7 @@ const modeButtons = document.querySelectorAll<HTMLButtonElement>("#mode button")
 
 let mode = (localStorage.getItem("mode") ?? "block") as Mode;
 let running = false;
+let queued = false;
 let resetArmed: number | undefined;
 
 window.addEventListener("unhandledrejection", (e) => status(`Error: ${e.reason}`, ""));
@@ -110,14 +111,17 @@ function next() {
 }
 
 async function analyze() {
-  if (running) return;
+  if (running) {
+    queued = true;
+    return;
+  }
+  queued = false;
   const state = view.state;
   const lines = state.doc.toString().split("\n");
   const segs = segment(lines, mode);
   if (!segs.length) return status("Nothing to analyze.", "");
 
   running = true;
-  const runMode = mode;
   $("analyze").classList.add("busy");
   const startDoc = state.doc;
   const toSend = segs.filter((s) => !s.fixed);
@@ -148,8 +152,8 @@ async function analyze() {
   } finally {
     running = false;
     $("analyze").classList.remove("busy");
+    if (queued) analyze();
     await refreshLedger();
-    if (mode !== runMode) analyze();
   }
 }
 

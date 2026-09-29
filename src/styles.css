@@ -9,6 +9,13 @@
   --accent: #74ade8;
   --on-accent: #1b1e24;
   --code: #d4a55d;
+  --tok-keyword: #b477cf;
+  --tok-string: #a1c181;
+  --tok-number: #bf956a;
+  --tok-comment: #7d8390;
+  --tok-function: #73ade9;
+  --tok-type: #6eb4bf;
+  --tok-property: #d07277;
   --decision: 255 138 76;
   --action: 116 173 232;
   --info: 135 138 152;
@@ -28,6 +35,13 @@
     --accent: #2d69c2;
     --on-accent: #ffffff;
     --code: #8f5512;
+    --tok-keyword: #a626a4;
+    --tok-string: #387c37;
+    --tok-number: #8a5e00;
+    --tok-comment: #7c7d85;
+    --tok-function: #2f63d6;
+    --tok-type: #01729f;
+    --tok-property: #c4382c;
     --decision: 190 78 18;
     --action: 45 120 210;
     --info: 150 150 158;
@@ -91,6 +105,13 @@ button.notes-toggle.on { background: color-mix(in srgb, var(--accent) 30%, trans
 .md-link { color: var(--accent); }
 .md-quote { color: var(--muted); font-style: italic; }
 .md-punct { color: var(--muted); }
+.tok-keyword { color: var(--tok-keyword); }
+.tok-string { color: var(--tok-string); }
+.tok-number { color: var(--tok-number); }
+.tok-comment { color: var(--tok-comment); font-style: italic; }
+.tok-function { color: var(--tok-function); }
+.tok-type { color: var(--tok-type); }
+.tok-property { color: var(--tok-property); }
 
 .cm-line.cls-line { position: relative; }
 .cls-line::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }

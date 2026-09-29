@@ -27,7 +27,7 @@
     "active": true,
     "publisher": "brainroad",
     "copyright": "Copyright © 2026 Tomy Spagnoletti Duval",
-    "targets": ["app", "dmg"],
+    "targets": ["app"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",

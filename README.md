@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  Powered by <a href="https://openrouter.ai/typesafe/jev-1.13">Jev</a>, TypeSafe's new decision model · macOS · MIT
+  Powered by <a href="https://typesafe.ai">Jev</a>, TypeSafe's new decision model · macOS · MIT
 </p>
 
 ![SpeedRead classifying an agent report in Sentence mode](docs/screenshot.png)
@@ -27,7 +27,7 @@ SpeedRead finds those sentences for you:
 
 ## Powered by Jev
 
-SpeedRead is built on [Jev](https://openrouter.ai/docs/guides/community/jev), the first "System One" model from TypeSafe, served through the OpenRouter Decisions API. Jev does not generate text. It answers typed questions with a choice and a probability for each option, which is exactly what triage needs:
+SpeedRead is built on [Jev](https://typesafe.ai), the first "System One" model from [TypeSafe](https://typesafe.ai), served through the [OpenRouter Decisions API](https://openrouter.ai/docs/guides/community/jev). Jev does not generate text. It answers typed questions with a choice and a probability for each option, which is exactly what triage needs:
 
 - **Fast**: a whole agent message is classified in about 0.3 to 0.6 seconds, batched into a single call.
 - **Cheap**: a typical analysis costs a few hundredths of a cent.
@@ -112,4 +112,4 @@ SpeedRead is built with Tauri, so Windows, Linux, iOS and Android builds are wit
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE) © 2026 Tomy Spagnoletti Duval · [brainroad.xyz](https://brainroad.xyz)

@@ -2,7 +2,7 @@
 name = "speedread"
 version = "0.1.0"
 description = "Read AI coding agent outputs in seconds: Jev highlights what needs your decision or action."
-authors = ["Tomy Spagnoletti"]
+authors = ["Tomy Spagnoletti Duval"]
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/TomySpagnoletti/speed-reading-app"

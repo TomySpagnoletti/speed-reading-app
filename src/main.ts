@@ -1,3 +1,6 @@
+import "@fontsource-variable/lilex/wght.css";
+import "@fontsource-variable/lilex/wght-italic.css";
+import "@fontsource-variable/ibm-plex-sans/wght.css";
 import { invoke } from "@tauri-apps/api/core";
 import type { Range } from "@codemirror/state";
 import { Decoration, EditorView } from "@codemirror/view";

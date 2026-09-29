@@ -5,14 +5,14 @@
   --text: #dce0e5;
   --muted: #878a98;
   --gutter: #4e5a5f;
-  --active-line: #2f343e99;
+  --active-line: rgb(116 173 232 / 0.09);
   --accent: #74ade8;
   --code: #d4a55d;
   --decision: 255 138 76;
   --action: 116 173 232;
   --info: 135 138 152;
-  --mono: ui-monospace;
-  --sans: system-ui;
+  --mono: "Lilex Variable";
+  --sans: "IBM Plex Sans Variable";
   color-scheme: dark;
 }
 @media (prefers-color-scheme: light) {
@@ -23,7 +23,7 @@
     --text: #242529;
     --muted: #7a7a80;
     --gutter: #a0a0a8;
-    --active-line: #ebebec99;
+    --active-line: rgb(59 123 214 / 0.07);
     --accent: #3b7bd6;
     --code: #a8661a;
     --decision: 222 98 30;
@@ -68,16 +68,16 @@ button.mini.armed { border-color: rgb(var(--decision)); color: #fff; background:
 #notes[hidden] { display: none; }
 button.notes-toggle { margin-left: auto; }
 button.notes-toggle.on { background: color-mix(in srgb, var(--accent) 30%, transparent); }
-.cm-editor { height: 100%; background: var(--bg); color: var(--text); font-size: 14px; }
+.cm-editor { height: 100%; background: var(--bg); color: var(--text); font-size: 15px; }
 .cm-editor.cm-focused { outline: none; }
-.cm-scroller { font-family: var(--mono); line-height: 1.6; }
+.cm-editor .cm-scroller { font-family: var(--mono); line-height: 1.618; }
 .cm-content { padding: 12px 0 40vh; caret-color: var(--accent); }
 .cm-line { padding: 0 16px 0 12px; }
 .cm-cursor { border-left: 2px solid var(--accent); }
-.cm-gutters { background: var(--bg); border: none; color: var(--gutter); padding-left: 8px; }
-.cm-lineNumbers .cm-gutterElement { min-width: 4ch; padding: 0 12px 0 4px; text-align: right; font-variant-numeric: tabular-nums; cursor: pointer; }
-.cm-activeLineGutter { background: transparent; color: var(--text); }
-.cm-activeLine { background: var(--active-line); }
+.cm-editor .cm-gutters { background: var(--bg); border: none; color: var(--gutter); }
+.cm-lineNumbers .cm-gutterElement { min-width: 5ch; padding: 0 12px 0 16px; text-align: right; font-variant-numeric: tabular-nums; cursor: pointer; }
+.cm-editor .cm-gutters .cm-activeLineGutter { background: var(--active-line); color: var(--text); }
+.cm-editor .cm-content .cm-activeLine { background: var(--active-line); }
 .cm-selectionBackground { background: color-mix(in srgb, var(--accent) 30%, transparent) !important; }
 .cm-placeholder { color: var(--muted); font-style: italic; }
 

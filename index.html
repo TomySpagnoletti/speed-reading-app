@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SpeedRead</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+    <script type="module" src="/src/main.ts" defer></script>
+  </head>
+  <body>
+    <header id="toolbar">
+      <div class="seg" id="mode">
+        <button data-mode="line" title="Classify each line (⌘L to cycle modes)">Line</button>
+        <button data-mode="block" title="Classify each Markdown block (⌘L to cycle modes)">Block</button>
+        <button data-mode="sentence" title="Classify each sentence (⌘L to cycle modes)">Sentence</button>
+      </div>
+      <button id="analyze" class="primary" title="⌘↵">Analyze <kbd>⌘↵</kbd></button>
+      <button id="next" title="Jump to the next item that needs attention (⌘J)">Next <kbd>⌘J</kbd></button>
+      <button id="prune" class="danger" title="Delete every info segment (⌘⇧⌫). Undo with ⌘Z.">Delete info <kbd>⌘⇧⌫</kbd></button>
+      <div class="legend">
+        <span class="chip decision"><i></i>Decision <b id="c-decision">0</b></span>
+        <span class="chip action"><i></i>Action <b id="c-action">0</b></span>
+        <span class="chip info"><i></i>Info <b id="c-info">0</b></span>
+      </div>
+      <button id="toggle-notes" class="notes-toggle" title="Open or close the notes panel">Notes</button>
+    </header>
+    <main id="workspace">
+      <section id="editor"></section>
+      <section id="notes" hidden></section>
+    </main>
+    <footer id="status">
+      <span id="status-text"></span>
+      <span class="status-right">
+        <span id="status-meta"></span>
+        <span id="ledger" title="Every Jev call since the last reset, stored in ~/.speedread/ledger.jsonl"></span>
+        <button id="reset-ledger" class="mini" title="Reset the call ledger">Reset</button>
+      </span>
+    </footer>
+  </body>
+</html>

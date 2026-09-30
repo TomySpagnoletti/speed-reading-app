@@ -1,5 +1,5 @@
 import { invertedEffects } from "@codemirror/commands";
-import { StateEffect, StateField, type EditorState, type Line, type Range, type TransactionSpec } from "@codemirror/state";
+import { StateEffect, StateField, type ChangeSet, type EditorState, type Line, type Range, type TransactionSpec } from "@codemirror/state";
 import { Decoration, type DecorationSet, EditorView } from "@codemirror/view";
 import type { Cat, Segment } from "./segment.ts";
 
@@ -30,21 +30,27 @@ function render(state: EditorState, segments: DecorationSet): DecorationSet {
   return Decoration.set(out, true);
 }
 
+function alters(changes: ChangeSet, from: number, to: number): boolean {
+  let hit = false;
+  changes.iterChanges((fromA, toA, _fromB, _toB, inserted) => {
+    hit ||= inserted.length ? fromA <= to && toA >= from : fromA < to && toA > from;
+  });
+  return hit;
+}
+
 export const segmentField = StateField.define<DecorationSet>({
   create: () => Decoration.none,
   update(value, tr) {
-    for (const e of tr.effects) if (e.is(setSegments)) return e.value;
+    let set: DecorationSet | undefined;
+    for (const e of tr.effects) if (e.is(setSegments)) set = e.value;
+    if (set) return set;
     if (!tr.docChanged) return value;
-    return value.update({ filter: (from, to) => !tr.changes.touchesRange(from, to) }).map(tr.changes);
+    return value.update({ filter: (from, to) => !alters(tr.changes, from, to) }).map(tr.changes);
   },
   provide: (f) => EditorView.decorations.compute([f, "doc"], (state) => render(state, state.field(f))),
 });
 
-const undoSegments = invertedEffects.of((tr) => {
-  if (!tr.docChanged) return [];
-  for (const e of tr.effects) if (e.is(setSegments)) return [setSegments.of(tr.startState.field(segmentField))];
-  return [];
-});
+const undoSegments = invertedEffects.of((tr) => (tr.docChanged ? [setSegments.of(tr.startState.field(segmentField))] : []));
 
 export const classExtension = [segmentField, undoSegments];
 

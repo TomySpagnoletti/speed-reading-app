@@ -5,7 +5,7 @@
   --text: #dce0e5;
   --muted: #9a9dab;
   --gutter: #6e7681;
-  --active-line: rgb(116 173 232 / 0.09);
+  --active-line: color-mix(in srgb, var(--text) 5%, transparent);
   --accent: #74ade8;
   --on-accent: #1b1e24;
   --code: #d4a55d;
@@ -31,7 +31,6 @@
     --text: #242529;
     --muted: #66666d;
     --gutter: #85858d;
-    --active-line: rgb(59 123 214 / 0.07);
     --accent: #2d69c2;
     --on-accent: #ffffff;
     --code: #8f5512;
@@ -94,7 +93,7 @@ button.notes-toggle.on { background: color-mix(in srgb, var(--accent) 30%, trans
 .cm-lineNumbers .cm-gutterElement { min-width: 5ch; padding: 0 12px 0 16px; text-align: right; font-variant-numeric: tabular-nums; cursor: pointer; }
 .cm-editor .cm-gutters .cm-activeLineGutter { background: var(--active-line); color: var(--text); }
 .cm-editor .cm-content .cm-activeLine { background: var(--active-line); }
-.cm-selectionBackground { background: color-mix(in srgb, var(--accent) 30%, transparent) !important; }
+.cm-selectionBackground { background: color-mix(in srgb, var(--text) 18%, transparent) !important; }
 .cm-placeholder { color: var(--muted); font-style: italic; }
 
 .md-heading { font-weight: 700; }

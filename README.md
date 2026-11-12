@@ -38,6 +38,7 @@ SpeedRead is built on [Jev](https://typesafe.ai), the first "System One" model f
 - **Three granularities**: classify each line, each Markdown block, or each sentence. Sentence mode shines on long agent paragraphs where one sentence out of six matters.
 - **Delete info**: remove every info segment at once, including info sentences inside kept lines. Undo restores the text and its colors.
 - **Jump to next**: move through decisions and actions with one shortcut.
+- **Saved text**: the text you paste is saved locally as you edit it and comes back when the app restarts.
 - **Focused editor**: line numbers, click a number to select its line, Markdown highlighting that never hides a character.
 - **Notes panel**: a second editor on the right for your own notes. Nothing typed there is sent to Jev. Notes are saved locally.
 - **Call ledger**: every Jev call is logged locally with its cost, and the status bar shows the running total.
@@ -79,6 +80,7 @@ The app reads `OPENROUTER_API_KEY` from `~/.speedread/.env` on every request, so
 
 - The text you analyze is sent to OpenRouter and TypeSafe to be classified.
 - Your API key stays on your machine, in `~/.speedread/.env`.
+- The text you paste stays on your machine, in `~/.speedread/text.md`, apart from what is sent for classification.
 - Notes stay on your machine, in `~/.speedread/notes.md`.
 - The call ledger stays on your machine, in `~/.speedread/ledger.jsonl`. The Reset button in the status bar clears it after a confirmation click.
 
@@ -103,7 +105,7 @@ This runs the TypeScript unit tests with the Node test runner and the Rust tests
 | `src/classes.ts` | Colors, info deletion, navigation |
 | `src/editor.ts` | Editor setup shared by the main editor and the notes panel |
 | `src/main.ts` | Analysis flow, toolbar, notes panel and shortcuts |
-| `src-tauri/src/lib.rs` | OpenRouter proxy, API key loading, call ledger, notes storage |
+| `src-tauri/src/lib.rs` | OpenRouter proxy, API key loading, call ledger, text and notes storage |
 | `app-icon.svg` | Icon source, turned into every platform format with `npx tauri icon app-icon.svg` |
 
 Contributions are welcome. Read [AGENTS.md](AGENTS.md) first: the code is in English, has no comments, and every piece of logic lives in exactly one place.

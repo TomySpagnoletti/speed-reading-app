@@ -2,7 +2,7 @@ import "@fontsource-variable/lilex/wght.css";
 import "@fontsource-variable/lilex/wght-italic.css";
 import "@fontsource-variable/ibm-plex-sans/wght.css";
 import { invoke } from "@tauri-apps/api/core";
-import type { Range } from "@codemirror/state";
+import type { Extension, Range } from "@codemirror/state";
 import { Decoration, EditorView } from "@codemirror/view";
 import { classExtension, classified, gotoNext, planPrune, segmentRange, setSegments } from "./classes.ts";
 import { createEditor, isFullPaste } from "./editor.ts";
@@ -19,7 +19,16 @@ let resetArmed: number | undefined;
 
 window.addEventListener("unhandledrejection", (e) => status(`Error: ${e.reason}`, ""));
 
-const view = createEditor($("editor"), "", "Paste the output of Claude or any other coding agent here…", [
+type Doc = "text" | "notes";
+
+async function persistedEditor(id: string, doc: Doc, hint: string, extensions: Extension[]): Promise<EditorView> {
+  const save = EditorView.updateListener.of((u) => {
+    if (u.docChanged) invoke("save_doc", { doc, text: u.state.doc.toString() });
+  });
+  return createEditor($(id), await invoke<string>("load_doc", { doc }), hint, [extensions, save]);
+}
+
+const view = await persistedEditor("editor", "text", "Paste the output of Claude or any other coding agent here…", [
   classExtension,
   EditorView.updateListener.of((u) => {
     if (u.docChanged || u.transactions.some((tr) => tr.effects.some((e) => e.is(setSegments)))) refreshCounts();
@@ -27,11 +36,7 @@ const view = createEditor($("editor"), "", "Paste the output of Claude or any ot
   }),
 ]);
 
-const notes = createEditor($("notes"), await invoke<string>("load_notes"), "Notes. Nothing typed here is sent to Jev.", [
-  EditorView.updateListener.of((u) => {
-    if (u.docChanged) invoke("save_notes", { text: u.state.doc.toString() });
-  }),
-]);
+const notes = await persistedEditor("notes", "notes", "Notes. Nothing typed here is sent to Jev.", []);
 
 function renderNotes(open: boolean) {
   $("notes").hidden = !open;

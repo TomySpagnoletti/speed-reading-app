@@ -1,3 +1,4 @@
+use serde::Deserialize;
 use serde_json::{json, Value};
 use std::io::Write;
 use std::path::{Path, PathBuf};
@@ -7,6 +8,22 @@ use tauri::Manager;
 
 const DECISIONS_URL: &str = "https://openrouter.ai/api/alpha/decisions";
 const KEY_NAME: &str = "OPENROUTER_API_KEY";
+
+#[derive(Deserialize, Clone, Copy)]
+#[serde(rename_all = "lowercase")]
+enum Doc {
+    Text,
+    Notes,
+}
+
+impl Doc {
+    fn file_name(self) -> &'static str {
+        match self {
+            Doc::Text => "text.md",
+            Doc::Notes => "notes.md",
+        }
+    }
+}
 
 struct Store {
     dir: PathBuf,
@@ -18,8 +35,8 @@ impl Store {
         self.dir.join("ledger.jsonl")
     }
 
-    fn notes(&self) -> PathBuf {
-        self.dir.join("notes.md")
+    fn doc(&self, doc: Doc) -> PathBuf {
+        self.dir.join(doc.file_name())
     }
 
     fn env(&self) -> PathBuf {
@@ -126,13 +143,13 @@ fn reset_ledger(store: tauri::State<'_, Store>) -> Result<(), String> {
 }
 
 #[tauri::command]
-fn load_notes(store: tauri::State<'_, Store>) -> Result<String, String> {
-    read_optional(&store.notes())
+fn load_doc(store: tauri::State<'_, Store>, doc: Doc) -> Result<String, String> {
+    read_optional(&store.doc(doc))
 }
 
 #[tauri::command]
-fn save_notes(store: tauri::State<'_, Store>, text: String) -> Result<(), String> {
-    let path = store.notes();
+fn save_doc(store: tauri::State<'_, Store>, doc: Doc, text: String) -> Result<(), String> {
+    let path = store.doc(doc);
     create_parent(&path)?;
     std::fs::write(&path, text).map_err(|e| format!("Cannot write {}: {e}", path.display()))
 }
@@ -146,7 +163,7 @@ pub fn run() {
             Ok(())
         })
         .manage(reqwest::Client::new())
-        .invoke_handler(tauri::generate_handler![decide, ledger_totals, reset_ledger, load_notes, save_notes])
+        .invoke_handler(tauri::generate_handler![decide, ledger_totals, reset_ledger, load_doc, save_doc])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
@@ -162,6 +179,14 @@ mod tests {
         let key = read_key(&path);
         std::fs::remove_file(&path).unwrap();
         assert_eq!(key.unwrap(), "test-key");
+    }
+
+    #[test]
+    fn docs_map_to_their_files() {
+        let file = |name: &str| serde_json::from_value::<Doc>(json!(name)).unwrap().file_name();
+        assert_eq!(file("text"), "text.md");
+        assert_eq!(file("notes"), "notes.md");
+        assert!(serde_json::from_value::<Doc>(json!("ledger")).is_err());
     }
 
     #[test]
